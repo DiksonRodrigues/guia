@@ -3,11 +3,18 @@
 import { useState } from "react";
 import { Building2, User, Phone, Mail, MapPin, CheckCircle, Send } from "lucide-react";
 import { cityConfig } from "@/config/city";
+import { createClient } from "@supabase/supabase-js";
 import styles from "./advertise.module.css";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export default function AdvertisePage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
     company: "",
     responsible: "",
@@ -23,9 +30,24 @@ export default function AdvertisePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simula envio (aqui você poderá conectar ao Supabase ou e-mail futuramente)
-    await new Promise((res) => setTimeout(res, 1500));
+    setError("");
+
+    const { error: dbError } = await supabase.from("leads").insert({
+      company: form.company,
+      responsible: form.responsible,
+      whatsapp: form.whatsapp,
+      email: form.email,
+      address: form.address,
+    });
+
     setLoading(false);
+
+    if (dbError) {
+      setError("Ocorreu um erro ao enviar. Tente novamente.");
+      console.error(dbError);
+      return;
+    }
+
     setSubmitted(true);
   };
 
@@ -189,6 +211,12 @@ export default function AdvertisePage() {
                     </>
                   )}
                 </button>
+
+                {error && (
+                  <p style={{ color: '#ef4444', textAlign: 'center', fontSize: '0.9rem' }}>
+                    {error}
+                  </p>
+                )}
 
                 <p className={styles.disclaimer}>
                   Ao enviar, você concorda que nossa equipe entre em contato pelos

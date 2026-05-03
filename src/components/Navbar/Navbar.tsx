@@ -14,15 +14,17 @@ export default function Navbar() {
             Guia<span className="gradient-text">{cityConfig.name}</span>
           </Link>
 
-          {/* Desktop Links */}
+          {/* Desktop Links - escondidos no mobile */}
           <div className={styles.navLinks}>
             <Link href="/" className={styles.navLink}>Início</Link>
             <Link href="/categories" className={styles.navLink}>Categorias</Link>
             <Link href="/about" className={styles.navLink}>Sobre</Link>
-            <Link href="/advertise" className={styles.navButton}>
-              Anunciar
-            </Link>
           </div>
+
+          {/* Botão Anunciar - sempre visível */}
+          <Link href="/advertise" className={styles.navButton}>
+            Anunciar
+          </Link>
         </div>
       </div>
     </nav>

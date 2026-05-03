@@ -1,9 +1,10 @@
-import { Search, MapPin, Star } from "lucide-react";
+import { MapPin, Star } from "lucide-react";
 import { cityConfig } from "@/config/city";
 import { getCategories, getFeaturedBusinesses } from "@/lib/database";
 import Link from "next/link";
 import styles from "./page.module.css";
 import * as LucideIcons from "lucide-react";
+import FloatingSearch from "@/components/FloatingSearch/FloatingSearch";
 
 export default async function Home() {
   const categories = await getCategories();
@@ -11,6 +12,9 @@ export default async function Home() {
 
   return (
     <div className={styles.homePage}>
+      {/* Lupa Flutuante - fixa na tela */}
+      <FloatingSearch />
+
       {/* Hero Section */}
       <section className={`${styles.hero} section animate-fade`}>
         <div className="container">
@@ -21,12 +25,6 @@ export default async function Home() {
             <p className={styles.heroSubtitle}>
               Encontre os melhores estabelecimentos, serviços e ofertas exclusivas na sua cidade.
             </p>
-            
-            <div className={`${styles.searchBox} glass-card`}>
-              <LucideIcons.Search className={styles.searchIcon} size={20} />
-              <input type="text" placeholder="O que você está procurando?" className={styles.searchInput} />
-              <button className={styles.searchButton}>Buscar</button>
-            </div>
           </div>
         </div>
       </section>

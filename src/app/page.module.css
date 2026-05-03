@@ -78,13 +78,22 @@
 .sectionHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: baseline; /* Alinhamento perfeito pelo texto */
+  margin-top: 5rem; /* Mais respiro entre seções */
   margin-bottom: 2rem;
+  gap: 1.5rem;
 }
+
 .viewAll {
   color: var(--primary);
-  font-weight: 600;
-  font-size: 0.875rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.viewAll:hover {
+  opacity: 0.8;
 }
 
 .featuredGrid {

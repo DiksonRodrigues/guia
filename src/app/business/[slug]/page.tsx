@@ -77,9 +77,6 @@ export default async function BusinessDetail({ params }: { params: Promise<{ slu
               >
                 <MessageCircle size={20} /> WhatsApp
               </a>
-              <button className={`${styles.btn} ${styles.btnOutline}`}>
-                <Share2 size={20} /> Compartilhar
-              </button>
             </div>
           </div>
         </header>

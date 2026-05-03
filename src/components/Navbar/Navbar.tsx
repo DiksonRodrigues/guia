@@ -14,12 +14,12 @@ export default function Navbar() {
             Guia<span className="gradient-text">{cityConfig.name}</span>
           </Link>
 
-          {/* Desktop Links - Hidden on Mobile via CSS */}
+          {/* Desktop Links */}
           <div className={styles.navLinks}>
             <Link href="/" className={styles.navLink}>Início</Link>
             <Link href="/categories" className={styles.navLink}>Categorias</Link>
             <Link href="/about" className={styles.navLink}>Sobre</Link>
-            <button className="btn btn-primary" style={{ padding: '0.6rem 1.2rem' }}>
+            <button className={styles.navButton}>
               Anunciar
             </button>
           </div>

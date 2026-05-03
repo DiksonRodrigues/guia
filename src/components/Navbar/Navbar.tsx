@@ -19,9 +19,9 @@ export default function Navbar() {
             <Link href="/" className={styles.navLink}>Início</Link>
             <Link href="/categories" className={styles.navLink}>Categorias</Link>
             <Link href="/about" className={styles.navLink}>Sobre</Link>
-            <button className={styles.navButton}>
+            <Link href="/advertise" className={styles.navButton}>
               Anunciar
-            </button>
+            </Link>
           </div>
         </div>
       </div>

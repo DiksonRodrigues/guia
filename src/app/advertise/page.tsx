@@ -23,8 +23,27 @@ export default function AdvertisePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simula envio (aqui você poderá conectar ao Supabase ou e-mail futuramente)
-    await new Promise((res) => setTimeout(res, 1500));
+
+    // Monta a mensagem formatada para o WhatsApp da equipe de vendas
+    const SALES_WHATSAPP = "5585999788679";
+    const message = [
+      `🔔 *Novo Lead — Guia${cityConfig.name}*`,
+      ``,
+      `🏢 *Empresa:* ${form.company}`,
+      `👤 *Responsável:* ${form.responsible}`,
+      `📱 *WhatsApp:* ${form.whatsapp}`,
+      `📧 *E-mail:* ${form.email}`,
+      `📍 *Endereço:* ${form.address}`,
+      ``,
+      `_Enviado pelo formulário do Guia${cityConfig.name}_`,
+    ].join("\n");
+
+    const url = `https://wa.me/${SALES_WHATSAPP}?text=${encodeURIComponent(message)}`;
+
+    // Pequeno delay visual para o usuário perceber que algo aconteceu
+    await new Promise((res) => setTimeout(res, 800));
+    window.open(url, "_blank");
+
     setLoading(false);
     setSubmitted(true);
   };

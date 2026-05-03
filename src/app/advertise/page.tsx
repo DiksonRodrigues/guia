@@ -55,7 +55,6 @@ export default function AdvertisePage() {
 
           {/* ── Lado Esquerdo: Benefícios ── */}
           <aside className={styles.sidebar}>
-            <span className={styles.badge}>100% Gratuito</span>
             <h1 className={styles.sideTitle}>
               Coloque seu negócio no <span className="gradient-text">mapa</span>
             </h1>
@@ -70,7 +69,6 @@ export default function AdvertisePage() {
                 "Listagem de produtos com fotos e preços",
                 "Botão de WhatsApp direto para o cliente",
                 "Aparece nas categorias relevantes",
-                "Zero custo para anunciar",
               ].map((b) => (
                 <li key={b} className={styles.benefitItem}>
                   <CheckCircle size={18} className={styles.benefitIcon} />

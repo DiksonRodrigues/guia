@@ -3,11 +3,18 @@
 import { useState } from "react";
 import { Building2, User, Phone, Mail, MapPin, CheckCircle, Send } from "lucide-react";
 import { cityConfig } from "@/config/city";
+import { createClient } from "@supabase/supabase-js";
 import styles from "./advertise.module.css";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export default function AdvertisePage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
     company: "",
     responsible: "",
@@ -23,28 +30,24 @@ export default function AdvertisePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError("");
 
-    // Monta a mensagem formatada para o WhatsApp da equipe de vendas
-    const SALES_WHATSAPP = "5585999788679";
-    const message = [
-      `🔔 *Novo Lead — Guia${cityConfig.name}*`,
-      ``,
-      `🏢 *Empresa:* ${form.company}`,
-      `👤 *Responsável:* ${form.responsible}`,
-      `📱 *WhatsApp:* ${form.whatsapp}`,
-      `📧 *E-mail:* ${form.email}`,
-      `📍 *Endereço:* ${form.address}`,
-      ``,
-      `_Enviado pelo formulário do Guia${cityConfig.name}_`,
-    ].join("\n");
-
-    const url = `https://wa.me/${SALES_WHATSAPP}?text=${encodeURIComponent(message)}`;
-
-    // Pequeno delay visual para o usuário perceber que algo aconteceu
-    await new Promise((res) => setTimeout(res, 800));
-    window.open(url, "_blank");
+    const { error: dbError } = await supabase.from("leads").insert({
+      company: form.company,
+      responsible: form.responsible,
+      whatsapp: form.whatsapp,
+      email: form.email,
+      address: form.address,
+    });
 
     setLoading(false);
+
+    if (dbError) {
+      setError("Ocorreu um erro ao enviar. Tente novamente.");
+      console.error(dbError);
+      return;
+    }
+
     setSubmitted(true);
   };
 
@@ -208,6 +211,12 @@ export default function AdvertisePage() {
                     </>
                   )}
                 </button>
+
+                {error && (
+                  <p style={{ color: '#ef4444', textAlign: 'center', fontSize: '0.9rem' }}>
+                    {error}
+                  </p>
+                )}
 
                 <p className={styles.disclaimer}>
                   Ao enviar, você concorda que nossa equipe entre em contato pelos

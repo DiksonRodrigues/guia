@@ -188,18 +188,20 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, rgba(245,158,11,0.15) 0%, rgba(91,33,182,0.1) 100%);
-  border: 1px solid rgba(245,158,11,0.35);
+  background: #fff;
+  border: 1.5px solid rgba(249, 115, 22, 0.35);
   border-radius: 14px;
   padding: 1.25rem 1.75rem;
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.2s, transform 0.2s;
+  box-shadow: 0 2px 12px rgba(249, 115, 22, 0.08);
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
 .couponTeaserInner:hover {
-  border-color: rgba(245,158,11,0.7);
+  border-color: rgba(249, 115, 22, 0.65);
   transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.14);
 }
 
 .couponTeaserLeft {
@@ -216,20 +218,20 @@
 .couponTeaserTitle {
   font-size: 1rem;
   font-weight: 700;
-  color: var(--text-main, #f8fafc);
+  color: var(--text-main);
   margin: 0;
 }
 
 .couponTeaserSub {
   font-size: 0.8rem;
-  color: var(--text-muted, #94a3b8);
+  color: var(--text-muted);
   margin: 0.2rem 0 0;
 }
 
 .couponTeaserCta {
   font-size: 0.875rem;
   font-weight: 700;
-  color: #f59e0b;
+  color: var(--accent);
   white-space: nowrap;
 }
 

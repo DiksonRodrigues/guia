@@ -17,6 +17,32 @@ type CouponData = {
   active: boolean;
 };
 
+const STOP_WORDS = new Set(["de", "do", "da", "no", "na", "em", "e", "o", "a", "os", "as", "um", "uma", "para", "pra"]);
+
+function generateCode(label: string): string {
+  const cleaned = label
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")   // remove acentos (range correto)
+    .replace(/[R$%]/g, "")             // remove símbolos monetários
+    .toUpperCase()
+    .replace(/[^A-Z0-9\s]/g, "")       // só letras, números, espaços
+    .trim();
+
+  const words = cleaned
+    .split(/\s+/)
+    .filter((w) => w && !STOP_WORDS.has(w.toLowerCase()));
+
+  if (words.length === 0) return "";
+  if (words.length === 1) return words[0].slice(0, 7);
+
+  // iniciais das primeiras palavras + última palavra completa, máx 7
+  const last = words[words.length - 1];
+  const initials = words.slice(0, -1).map((w) =>
+    /^\d+$/.test(w) ? w.slice(0, 2) : w[0]
+  ).join("");
+  return (initials + last).slice(0, 7);
+}
+
 const empty: CouponData = {
   business_id: "",
   code: "",
@@ -46,11 +72,30 @@ export default function CouponForm({
         }
       : empty
   );
+  const [codeManual, setCodeManual] = useState(isEdit);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const set = (k: keyof CouponData, v: any) =>
     setForm((f) => ({ ...f, [k]: v }));
+
+  const handleDiscountChange = (value: string) => {
+    setForm((f) => ({
+      ...f,
+      discount_label: value,
+      code: codeManual ? f.code : generateCode(value),
+    }));
+  };
+
+  const handleCodeChange = (value: string) => {
+    setCodeManual(true);
+    set("code", value.toUpperCase());
+  };
+
+  const handleCodeClear = () => {
+    setCodeManual(false);
+    setForm((f) => ({ ...f, code: generateCode(f.discount_label) }));
+  };
 
   const handleSubmit = async () => {
     if (!form.business_id || !form.code || !form.discount_label) {
@@ -105,24 +150,38 @@ export default function CouponForm({
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label}>Código do cupom *</label>
-            <input
-              className={styles.input}
-              value={form.code}
-              onChange={(e) => set("code", e.target.value.toUpperCase())}
-              placeholder="Ex: GUIA20"
-              style={{ fontFamily: "monospace", fontWeight: 700, letterSpacing: "0.08em" }}
-            />
-          </div>
-
-          <div className={styles.field}>
             <label className={styles.label}>Desconto *</label>
             <input
               className={styles.input}
               value={form.discount_label}
-              onChange={(e) => set("discount_label", e.target.value)}
-              placeholder="Ex: 20% OFF, R$10 OFF, Leve 2 Pague 1"
+              onChange={(e) => handleDiscountChange(e.target.value)}
+              placeholder="Ex: 20% OFF, R$10 OFF, Entrega Grátis"
             />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label} style={{ display: "flex", justifyContent: "space-between" }}>
+              <span>Código do cupom *</span>
+              {codeManual && (
+                <button
+                  type="button"
+                  onClick={handleCodeClear}
+                  style={{ fontSize: "0.72rem", color: "#5b21b6", background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}
+                >
+                  ↺ Gerar automático
+                </button>
+              )}
+            </label>
+            <input
+              className={styles.input}
+              value={form.code}
+              onChange={(e) => handleCodeChange(e.target.value)}
+              placeholder="Gerado automaticamente pelo desconto"
+              style={{ fontFamily: "monospace", fontWeight: 700, letterSpacing: "0.08em" }}
+            />
+            {!codeManual && form.code && (
+              <span style={{ fontSize: "0.72rem", color: "#64748b" }}>Gerado automaticamente — edite para personalizar</span>
+            )}
           </div>
 
           <div className={`${styles.field} ${styles.formFull}`}>

@@ -24,7 +24,7 @@ export default async function CuponsPage() {
         </div>
       </div>
 
-      <CouponSection coupons={coupons ?? []} emptyMessage="Nenhum cupom disponível no momento. Volte em breve!" />
+      <CouponSection coupons={coupons ?? []} emptyMessage="Nenhum cupom disponível no momento. Volte em breve!" hideHeader />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { cityConfig } from "@/config/city";
+import NavSearch from "@/components/NavSearch/NavSearch";
 import styles from "./navbar.module.css";
 
 export default function Navbar() {
@@ -22,10 +23,7 @@ export default function Navbar() {
             <Link href="/about" className={styles.navLink}>Sobre</Link>
           </div>
 
-          {/* Botão Anunciar - sempre visível */}
-          <Link href="/advertise" className={styles.navButton}>
-            Anunciar
-          </Link>
+          <NavSearch />
         </div>
       </div>
     </nav>

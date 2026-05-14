@@ -5,6 +5,7 @@ import Link from "next/link";
 import styles from "./page.module.css";
 import * as LucideIcons from "lucide-react";
 import FloatingSearch from "@/components/FloatingSearch/FloatingSearch";
+import BannerCarousel from "@/components/BannerCarousel/BannerCarousel";
 
 export default async function Home() {
   const categories = await getCategories();
@@ -15,19 +16,8 @@ export default async function Home() {
       {/* Lupa Flutuante - fixa na tela */}
       <FloatingSearch />
 
-      {/* Hero Section */}
-      <section className={`${styles.hero} section animate-fade`}>
-        <div className="container">
-          <div className={styles.heroContent}>
-            <h1 className={styles.heroTitle}>
-              Descubra o melhor de <span className="gradient-text">{cityConfig.name}</span>
-            </h1>
-            <p className={styles.heroSubtitle}>
-              Encontre os melhores estabelecimentos, serviços e ofertas exclusivas na sua cidade.
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* Banner Carousel */}
+      <BannerCarousel businesses={featuredBusinesses} />
 
       {/* Categories Section */}
       <section className={`${styles.categories} section`}>
@@ -59,7 +49,6 @@ export default async function Home() {
       <section className={`${styles.featured} section`}>
         <div className="container">
           <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>Destaques da Semana</h2>
             <Link href="/business" className={styles.viewAll}>Ver todos</Link>
           </div>
           

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { MapPin, Star } from "lucide-react";
 import { cityConfig } from "@/config/city";
 import { getCategories, getFeaturedBusinesses } from "@/lib/database";

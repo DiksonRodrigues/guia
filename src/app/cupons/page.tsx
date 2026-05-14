@@ -4,6 +4,8 @@ import CouponSection from "@/components/CouponSection/CouponSection";
 import { Tag } from "lucide-react";
 import styles from "./page.module.css";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: `Cupons de Desconto — ${cityConfig.appTitle}`,
   description: `Economize com cupons exclusivos nos melhores estabelecimentos de ${cityConfig.name}.`,

@@ -11,6 +11,7 @@ type Business = {
   slug: string;
   image_url: string;
   description: string;
+  discount_label?: string | null;
   categories?: { name: string };
 };
 
@@ -38,6 +39,9 @@ export default function BannerCarousel({ businesses }: { businesses: Business[] 
             tabIndex={i !== current ? -1 : 0}
           >
             <div className={styles.overlay} />
+            {biz.discount_label && (
+              <span className={styles.discountBadge}>{biz.discount_label}</span>
+            )}
             <div className={styles.content}>
               <span className={styles.tag}>{biz.categories?.name}</span>
               <h2 className={styles.name}>{biz.name}</h2>

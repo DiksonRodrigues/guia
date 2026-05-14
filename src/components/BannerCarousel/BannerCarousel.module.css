@@ -94,6 +94,21 @@
   letter-spacing: 0.02em;
 }
 
+.discountBadge {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 3;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 0.35rem 0.9rem;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.5);
+}
+
 /* ── Dots ── */
 .dots {
   position: absolute;

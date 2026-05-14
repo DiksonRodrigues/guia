@@ -11,7 +11,8 @@ export default function Navbar() {
         <div className={styles.navContainer}>
           {/* Logo */}
           <Link href="/" className={styles.logo}>
-            Guia<span className="gradient-text">{cityConfig.name}</span>
+            <span>Guia<span className="gradient-text">{cityConfig.name}</span></span>
+            <span className={styles.tagline}>Seu guia de descontos locais</span>
           </Link>
 
           {/* Desktop Links - escondidos no mobile */}

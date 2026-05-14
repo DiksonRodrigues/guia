@@ -1,0 +1,40 @@
+.strip {
+  width: calc(100% - 3rem);
+  margin: 0.75rem auto 0;
+  background: var(--primary);
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+}
+
+.inner {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.emoji {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .inner {
+    justify-content: center;
+    gap: 1rem 2rem;
+  }
+}

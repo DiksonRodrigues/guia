@@ -6,6 +6,7 @@ import styles from "./page.module.css";
 import * as LucideIcons from "lucide-react";
 import FloatingSearch from "@/components/FloatingSearch/FloatingSearch";
 import BannerCarousel from "@/components/BannerCarousel/BannerCarousel";
+import CredibilityStrip from "@/components/CredibilityStrip/CredibilityStrip";
 
 export default async function Home() {
   const categories = await getCategories();
@@ -18,6 +19,9 @@ export default async function Home() {
 
       {/* Banner Carousel */}
       <BannerCarousel businesses={featuredBusinesses} />
+
+      {/* Strip de credibilidade */}
+      <CredibilityStrip />
 
       {/* Categories Section */}
       <section className={`${styles.categories} section`}>
@@ -54,14 +58,17 @@ export default async function Home() {
           
           <div className={styles.featuredGrid}>
             {featuredBusinesses.map((biz: any, i: number) => (
-              <Link 
-                href={`/business/${biz.slug}`} 
-                key={biz.id} 
+              <Link
+                href={`/business/${biz.slug}`}
+                key={biz.id}
                 className={`${styles.featuredCard} glass-card animate-fade`}
                 style={{ animationDelay: `${i * 0.1}s` }}
               >
-                <div 
-                  className={styles.cardImage} 
+                {biz.discount_label && (
+                  <span className={styles.discountBadge}>{biz.discount_label}</span>
+                )}
+                <div
+                  className={styles.cardImage}
                   style={{ backgroundImage: `url(${biz.image_url})` }}
                 ></div>
                 <div className={styles.cardContent}>

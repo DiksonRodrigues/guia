@@ -103,6 +103,7 @@
 }
 .featuredCard {
   overflow: hidden;
+  position: relative;
 }
 .cardImage {
   height: 200px;
@@ -158,6 +159,20 @@
   align-items: center;
   gap: 0.25rem;
   color: var(--text-muted);
+}
+
+.discountBadge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.25rem 0.6rem;
+  border-radius: 100px;
+  letter-spacing: 0.03em;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.4);
 }
 
 @media (max-width: 768px) {

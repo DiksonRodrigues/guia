@@ -45,7 +45,7 @@ export default async function BusinessDetail({ params }: { params: Promise<{ slu
       <div className={styles.hero}>
         <div 
           className={styles.heroImage} 
-          style={{ backgroundImage: `linear-gradient(to bottom, rgba(15, 23, 42, 0.4), var(--background)), url(${business.image_url})` }}
+          style={{ backgroundImage: `linear-gradient(to bottom, rgba(245, 244, 249, 0.1), var(--background)), url(${business.image_url})` }}
         ></div>
       </div>
 

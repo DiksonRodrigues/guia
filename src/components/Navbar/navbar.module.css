@@ -1,12 +1,11 @@
 .navbar {
-  background: rgba(15, 23, 42, 0.95); /* Um pouco mais sólido para melhor contraste */
+  background: rgba(245, 244, 249, 0.95);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--surface-border);
   position: sticky;
   top: 0;
   z-index: 1000;
   height: 80px;
-  /* Removido flex do pai para não encolher o container */
 }
 
 .navContainer {
@@ -21,13 +20,13 @@
   font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: #ffffff; /* Garante que a logo seja branca */
+  color: var(--text-main);
   text-decoration: none;
 }
 
 .navLinks {
   display: flex;
-  gap: 2.5rem; /* Espaço generoso entre os links */
+  gap: 2.5rem;
   align-items: center;
 }
 
@@ -40,24 +39,24 @@
 }
 
 .navLink:hover {
-  color: #ffffff;
+  color: var(--primary);
 }
 
 /* Estilo do botão de anunciar no topo */
 .navButton {
-  background: var(--primary);
+  background: var(--accent);
   color: white;
   padding: 0.6rem 1.5rem;
   border-radius: 100px;
   font-weight: 700;
   border: none;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .navButton:hover {
   transform: translateY(-2px);
-  filter: brightness(1.1);
+  box-shadow: 0 8px 20px rgba(249, 115, 22, 0.35);
 }
 
 @media (max-width: 768px) {

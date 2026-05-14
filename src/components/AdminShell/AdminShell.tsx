@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Store, LogOut } from "lucide-react";
+import { Store, Tag, LogOut } from "lucide-react";
 import styles from "../../app/admin/admin.module.css";
 
 const navItems = [
   { href: "/admin/businesses", label: "Negócios", icon: Store },
+  { href: "/admin/cupons", label: "Cupons", icon: Tag },
 ];
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {

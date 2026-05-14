@@ -21,6 +21,7 @@ type Coupon = {
 type Props = {
   coupons: Coupon[];
   emptyMessage?: string;
+  hideHeader?: boolean;
 };
 
 function formatExpiry(dateStr: string) {
@@ -118,7 +119,7 @@ function CouponCard({ coupon }: { coupon: Coupon }) {
 
 const INITIAL_VISIBLE = 4;
 
-export default function CouponSection({ coupons, emptyMessage }: Props) {
+export default function CouponSection({ coupons, emptyMessage, hideHeader }: Props) {
   const [expanded, setExpanded] = useState(false);
 
   if (!coupons || coupons.length === 0) {
@@ -140,14 +141,18 @@ export default function CouponSection({ coupons, emptyMessage }: Props) {
   return (
     <section className={`${styles.section} section`}>
       <div className="container">
-        <div className={styles.header}>
-          <div className={styles.headerLeft}>
-            <Scissors size={20} className={styles.scissors} />
-            <h2 className={styles.title}>Cupons de Desconto</h2>
-          </div>
-          <Tag size={16} className={styles.tagIcon} />
-        </div>
-        <p className={styles.subtitle}>Copie o código e apresente no WhatsApp do estabelecimento</p>
+        {!hideHeader && (
+          <>
+            <div className={styles.header}>
+              <div className={styles.headerLeft}>
+                <Scissors size={20} className={styles.scissors} />
+                <h2 className={styles.title}>Cupons de Desconto</h2>
+              </div>
+              <Tag size={16} className={styles.tagIcon} />
+            </div>
+            <p className={styles.subtitle}>Copie o código e apresente no WhatsApp do estabelecimento</p>
+          </>
+        )}
 
         <div className={styles.grid}>
           {visible.map((coupon) => (

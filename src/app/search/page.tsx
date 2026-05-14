@@ -1,29 +1,84 @@
-import { MapPin, Star, ArrowLeft, SearchX } from "lucide-react";
+"use client";
+
+import { useEffect, useState, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
+import { MapPin, Star, ArrowLeft, SearchX, Loader2 } from "lucide-react";
 import { cityConfig } from "@/config/city";
-import { supabase } from "@/lib/supabase";
 import Link from "next/link";
+import Fuse from "fuse.js";
 import styles from "../page.module.css";
 
-async function searchBusinesses(q: string) {
-  const { data, error } = await supabase
-    .from("businesses")
-    .select("*, categories(name)")
-    .or(`name.ilike.%${q}%,description.ilike.%${q}%`)
-    .order("featured", { ascending: false })
-    .limit(30);
+type Business = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  image_url: string;
+  rating: number;
+  discount_label?: string | null;
+  categories?: { name: string };
+};
 
-  if (error) throw error;
-  return data;
+// Remove acentos para comparação (otica → otica, ótica → otica)
+function normalize(str: string) {
+  return str.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 }
 
-export default async function SearchPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ q?: string }>;
-}) {
-  const { q } = await searchParams;
-  const query = q?.trim() ?? "";
-  const results = query ? await searchBusinesses(query) : [];
+export default function SearchPage() {
+  const searchParams = useSearchParams();
+  const query = searchParams.get("q")?.trim() ?? "";
+
+  const [allBusinesses, setAllBusinesses] = useState<Business[]>([]);
+  const [results, setResults] = useState<Business[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Carrega todos os businesses uma vez
+  useEffect(() => {
+    fetch("/api/businesses")
+      .then((r) => r.json())
+      .then((data) => {
+        setAllBusinesses(data);
+        setLoading(false);
+      });
+  }, []);
+
+  // Roda busca sempre que query ou dados mudam
+  useEffect(() => {
+    if (!query || allBusinesses.length === 0) {
+      setResults([]);
+      return;
+    }
+
+    const fuse = new Fuse(allBusinesses, {
+      keys: [
+        { name: "name", weight: 0.6 },
+        { name: "description", weight: 0.25 },
+        { name: "categories.name", weight: 0.15 },
+      ],
+      threshold: 0.45,       // 0 = perfeito, 1 = qualquer coisa
+      distance: 100,
+      includeScore: true,
+      getFn: (obj, path) => {
+        // Normaliza o valor do campo antes de comparar
+        const val = Fuse.config.getFn(obj, path);
+        if (typeof val === "string") return normalize(val);
+        return val;
+      },
+    });
+
+    // Normaliza a query também
+    const hits = fuse.search(normalize(query));
+    setResults(hits.map((h) => h.item));
+  }, [query, allBusinesses]);
+
+  if (loading) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", padding: "8rem 0" }}>
+        <Loader2 size={32} style={{ color: "var(--primary)", animation: "spin 1s linear infinite" }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
   return (
     <div className="section">
@@ -57,7 +112,7 @@ export default async function SearchPage({
           </div>
         ) : (
           <div className={styles.featuredGrid}>
-            {results.map((biz: any, i: number) => (
+            {results.map((biz, i) => (
               <Link
                 href={`/business/${biz.slug}`}
                 key={biz.id}

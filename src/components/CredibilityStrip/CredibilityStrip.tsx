@@ -11,11 +11,16 @@ export default function CredibilityStrip() {
   return (
     <div className={styles.strip}>
       <div className={styles.inner}>
-        {items.map((item) => (
-          <div key={item.text} className={styles.item}>
-            <span className={styles.emoji}>{item.emoji}</span>
-            <span className={styles.text}>{item.text}</span>
-          </div>
+        {items.map((item, i) => (
+          <>
+            <div key={item.text} className={styles.item}>
+              <span className={styles.emoji}>{item.emoji}</span>
+              <span className={styles.text}>{item.text}</span>
+            </div>
+            {i < items.length - 1 && (
+              <span key={`sep-${i}`} className={styles.separator}>·</span>
+            )}
+          </>
         ))}
       </div>
     </div>

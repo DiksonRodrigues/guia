@@ -6,7 +6,6 @@ import styles from "./page.module.css";
 import * as LucideIcons from "lucide-react";
 import FloatingSearch from "@/components/FloatingSearch/FloatingSearch";
 import BannerCarousel from "@/components/BannerCarousel/BannerCarousel";
-import CredibilityStrip from "@/components/CredibilityStrip/CredibilityStrip";
 
 export default async function Home() {
   const categories = await getCategories();
@@ -20,8 +19,6 @@ export default async function Home() {
       {/* Banner Carousel */}
       <BannerCarousel businesses={featuredBusinesses} />
 
-      {/* Strip de credibilidade */}
-      <CredibilityStrip />
 
       {/* Categories Section */}
       <section className={`${styles.categories} section`}>

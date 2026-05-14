@@ -46,6 +46,23 @@ export async function getBusinessesByCategory(categorySlug: string) {
   return { businesses: data, category: catData };
 }
 
+export async function getCoupons() {
+  const now = new Date().toISOString();
+  const { data, error } = await supabase
+    .from("coupons")
+    .select(`
+      *,
+      businesses (name, whatsapp, slug)
+    `)
+    .eq("active", true)
+    .or(`expires_at.is.null,expires_at.gt.${now}`)
+    .order("created_at", { ascending: false })
+    .limit(50);
+
+  if (error) throw error;
+  return data;
+}
+
 export async function getBusinessBySlug(slug: string) {
   const { data, error } = await supabase
     .from("businesses")

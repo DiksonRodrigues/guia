@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { MapPin, Star, ArrowLeft, SearchX, Loader2 } from "lucide-react";
 import { cityConfig } from "@/config/city";
@@ -19,12 +19,21 @@ type Business = {
   categories?: { name: string };
 };
 
-// Remove acentos para comparação (otica → otica, ótica → otica)
 function normalize(str: string) {
   return str.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 }
 
-export default function SearchPage() {
+// Cria versão normalizada dos campos para o Fuse comparar
+function normalizeForSearch(businesses: Business[]) {
+  return businesses.map((b) => ({
+    ...b,
+    _name: normalize(b.name),
+    _description: normalize(b.description ?? ""),
+    _category: normalize(b.categories?.name ?? ""),
+  }));
+}
+
+function SearchResults() {
   const searchParams = useSearchParams();
   const query = searchParams.get("q")?.trim() ?? "";
 
@@ -32,70 +41,46 @@ export default function SearchPage() {
   const [results, setResults] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Carrega todos os businesses uma vez
   useEffect(() => {
     fetch("/api/businesses")
       .then((r) => r.json())
-      .then((data) => {
-        setAllBusinesses(data);
-        setLoading(false);
-      });
+      .then((data) => { setAllBusinesses(data); setLoading(false); });
   }, []);
 
-  // Roda busca sempre que query ou dados mudam
   useEffect(() => {
-    if (!query || allBusinesses.length === 0) {
-      setResults([]);
-      return;
-    }
+    if (!query || allBusinesses.length === 0) { setResults([]); return; }
 
-    const fuse = new Fuse(allBusinesses, {
+    const normalized = normalizeForSearch(allBusinesses);
+    const fuse = new Fuse(normalized, {
       keys: [
-        { name: "name", weight: 0.6 },
-        { name: "description", weight: 0.25 },
-        { name: "categories.name", weight: 0.15 },
+        { name: "_name", weight: 0.6 },
+        { name: "_description", weight: 0.25 },
+        { name: "_category", weight: 0.15 },
       ],
-      threshold: 0.45,       // 0 = perfeito, 1 = qualquer coisa
+      threshold: 0.45,
       distance: 100,
       includeScore: true,
-      getFn: (obj, path) => {
-        // Normaliza o valor do campo antes de comparar
-        const val = Fuse.config.getFn(obj, path);
-        if (typeof val === "string") return normalize(val);
-        return val;
-      },
     });
 
-    // Normaliza a query também
-    const hits = fuse.search(normalize(query));
-    setResults(hits.map((h) => h.item));
+    setResults(fuse.search(normalize(query)).map((h) => h.item));
   }, [query, allBusinesses]);
 
-  if (loading) {
-    return (
-      <div style={{ display: "flex", justifyContent: "center", padding: "8rem 0" }}>
-        <Loader2 size={32} style={{ color: "var(--primary)", animation: "spin 1s linear infinite" }} />
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      </div>
-    );
-  }
+  if (loading) return (
+    <div style={{ display: "flex", justifyContent: "center", padding: "8rem 0" }}>
+      <Loader2 size={32} style={{ color: "var(--primary)", animation: "spin 1s linear infinite" }} />
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
 
   return (
     <div className="section">
       <div className="container">
-        <Link
-          href="/"
-          style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--text-muted)", marginBottom: "2rem" }}
-        >
+        <Link href="/" style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--text-muted)", marginBottom: "2rem" }}>
           <ArrowLeft size={18} /> Voltar
         </Link>
 
         <h1 style={{ fontSize: "1.75rem", fontWeight: 800, marginBottom: "0.5rem" }}>
-          {query ? (
-            <>Resultados para <span className="gradient-text">"{query}"</span></>
-          ) : (
-            "Busca"
-          )}
+          {query ? <>Resultados para <span className="gradient-text">"{query}"</span></> : "Busca"}
         </h1>
         <p style={{ color: "var(--text-muted)", marginBottom: "2.5rem", fontSize: "0.9rem" }}>
           {results.length} estabelecimento{results.length !== 1 ? "s" : ""} encontrado{results.length !== 1 ? "s" : ""}
@@ -122,10 +107,7 @@ export default function SearchPage() {
                 {biz.discount_label && (
                   <span className={styles.discountBadge}>{biz.discount_label}</span>
                 )}
-                <div
-                  className={styles.cardImage}
-                  style={{ backgroundImage: `url(${biz.image_url})` }}
-                />
+                <div className={styles.cardImage} style={{ backgroundImage: `url(${biz.image_url})` }} />
                 <div className={styles.cardContent}>
                   <div className={styles.cardHeader}>
                     <h3 className={styles.cardTitle}>{biz.name}</h3>
@@ -137,9 +119,7 @@ export default function SearchPage() {
                   <p className={styles.cardDesc}>{biz.description}</p>
                   <div className={styles.cardFooter}>
                     <span className={styles.cardTag}>{biz.categories?.name}</span>
-                    <span className={styles.cardLocation}>
-                      <MapPin size={12} /> {cityConfig.name}
-                    </span>
+                    <span className={styles.cardLocation}><MapPin size={12} /> {cityConfig.name}</span>
                   </div>
                 </div>
               </Link>
@@ -148,5 +128,18 @@ export default function SearchPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ display: "flex", justifyContent: "center", padding: "8rem 0" }}>
+        <Loader2 size={32} style={{ color: "var(--primary)", animation: "spin 1s linear infinite" }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    }>
+      <SearchResults />
+    </Suspense>
   );
 }

@@ -93,34 +93,6 @@
   letter-spacing: 0.02em;
 }
 
-/* ── Arrows ── */
-.arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--primary);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  transition: background 0.2s, transform 0.2s;
-}
-
-.arrow:hover {
-  background: #fff;
-  transform: translateY(-50%) scale(1.08);
-}
-
-.arrowLeft  { left: 1.25rem; }
-.arrowRight { right: 1.25rem; }
-
 /* ── Dots ── */
 .dots {
   position: absolute;
@@ -155,7 +127,5 @@
   .content { padding: 1.5rem; }
   .name { font-size: 1.4rem; }
   .desc { display: none; }
-  .arrow { width: 34px; height: 34px; }
-  .arrowLeft  { left: 0.75rem; }
-  .arrowRight { right: 0.75rem; }
+
 }

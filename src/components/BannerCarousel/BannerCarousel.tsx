@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import styles from "./BannerCarousel.module.css";
 
 type Business = {
@@ -19,7 +19,6 @@ export default function BannerCarousel({ businesses }: { businesses: Business[] 
   const [current, setCurrent] = useState(0);
 
   const next = useCallback(() => setCurrent((c) => (c + 1) % slides.length), [slides.length]);
-  const prev = () => setCurrent((c) => (c - 1 + slides.length) % slides.length);
 
   useEffect(() => {
     const t = setInterval(next, 4500);
@@ -48,14 +47,6 @@ export default function BannerCarousel({ businesses }: { businesses: Business[] 
           </Link>
         ))}
       </div>
-
-      {/* Arrows */}
-      <button className={`${styles.arrow} ${styles.arrowLeft}`} onClick={prev} aria-label="Anterior">
-        <ChevronLeft size={22} />
-      </button>
-      <button className={`${styles.arrow} ${styles.arrowRight}`} onClick={next} aria-label="Próximo">
-        <ChevronRight size={22} />
-      </button>
 
       {/* Dots */}
       <div className={styles.dots}>

@@ -46,6 +46,22 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Coupon Teaser */}
+      <section className={styles.couponTeaser}>
+        <div className="container">
+          <Link href="/cupons" className={styles.couponTeaserInner}>
+            <div className={styles.couponTeaserLeft}>
+              <span className={styles.couponTeaserIcon}>🏷️</span>
+              <div>
+                <p className={styles.couponTeaserTitle}>Cupons de Desconto</p>
+                <p className={styles.couponTeaserSub}>Economize nos melhores estabelecimentos de {cityConfig.name}</p>
+              </div>
+            </div>
+            <span className={styles.couponTeaserCta}>Ver cupons →</span>
+          </Link>
+        </div>
+      </section>
+
       {/* Featured Section */}
       <section className={`${styles.featured} section`}>
         <div className="container">

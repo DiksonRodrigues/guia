@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(git checkout *)",
+      "Bash(node -e ' *)",
+      "Bash(node scripts/fix-images.js)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(gh pr create --title 'fix: corrige imagens de produtos e converte tudo para WebP' --body ' *)",
+      "Bash(git commit *)",
+      "Bash(git merge *)",
+      "Bash(git pull *)",
+      "Bash(npm install *)"
+    ]
+  }
+}

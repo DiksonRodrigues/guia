@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { requireAdminAuth } from "@/lib/admin-auth";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const denied = await requireAdminAuth(req);
+  if (denied) return denied;
   const { data, error } = await supabase
     .from("businesses")
     .select("*, categories(name)")
@@ -11,6 +14,8 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const denied = await requireAdminAuth(req);
+  if (denied) return denied;
   const body = await req.json();
   const { error, data } = await supabase
     .from("businesses")

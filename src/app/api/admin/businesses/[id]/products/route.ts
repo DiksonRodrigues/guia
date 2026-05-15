@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { requireAdminAuth } from "@/lib/admin-auth";
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const denied = await requireAdminAuth(req);
+  if (denied) return denied;
   const { id: business_id } = await params;
   const body = await req.json();
   const { error, data } = await supabase

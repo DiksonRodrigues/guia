@@ -1,3 +1,13 @@
+import { NextRequest, NextResponse } from "next/server";
+
+export async function requireAdminAuth(req: NextRequest): Promise<NextResponse | null> {
+  const token = req.cookies.get("admin_session")?.value;
+  if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const expected = await computeToken();
+  if (token !== expected) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  return null;
+}
+
 export async function computeToken(): Promise<string> {
   const secret = process.env.ADMIN_SESSION_SECRET ?? "changeme";
   const password = process.env.ADMIN_PASSWORD ?? "";

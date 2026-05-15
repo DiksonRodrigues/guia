@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { requireAdminAuth } from "@/lib/admin-auth";
 
-export async function GET(_: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const denied = await requireAdminAuth(req);
+  if (denied) return denied;
   const { id } = await params;
   const { data, error } = await supabase
     .from("businesses")
@@ -13,6 +16,8 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ id: st
 }
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const denied = await requireAdminAuth(req);
+  if (denied) return denied;
   const { id } = await params;
   const body = await req.json();
   const { error, data } = await supabase
@@ -25,7 +30,9 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   return NextResponse.json(data);
 }
 
-export async function DELETE(_: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const denied = await requireAdminAuth(req);
+  if (denied) return denied;
   const { id } = await params;
   const { error } = await supabase.from("businesses").delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });

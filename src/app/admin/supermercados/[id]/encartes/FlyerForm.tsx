@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Upload, X, Plus, Trash2 } from "lucide-react";
 import { uploadImage } from "@/lib/storage";
-import styles from "../../../../admin.module.css";
+import styles from "../../../admin.module.css";
 
 type Highlight = {
   id?: string;

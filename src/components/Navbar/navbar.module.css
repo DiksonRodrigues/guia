@@ -54,6 +54,19 @@
   color: var(--primary);
 }
 
+.navLinkHighlight {
+  color: var(--primary);
+  background: rgba(91, 33, 182, 0.08);
+  padding: 0.35rem 0.85rem;
+  border-radius: 100px;
+  font-weight: 700;
+}
+
+.navLinkHighlight:hover {
+  background: rgba(91, 33, 182, 0.15);
+  color: var(--primary);
+}
+
 @media (max-width: 768px) {
   .navLinks {
     display: none;

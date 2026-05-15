@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { MapPin, Star } from "lucide-react";
 import { cityConfig } from "@/config/city";
-import { getCategories, getFeaturedBusinesses } from "@/lib/database";
+import { getCategories, getFeaturedBusinesses, getSupermarkets } from "@/lib/database";
 import Link from "next/link";
 import styles from "./page.module.css";
 import * as LucideIcons from "lucide-react";
@@ -10,8 +10,12 @@ import FloatingSearch from "@/components/FloatingSearch/FloatingSearch";
 import BannerCarousel from "@/components/BannerCarousel/BannerCarousel";
 
 export default async function Home() {
-  const categories = await getCategories();
-  const featuredBusinesses = await getFeaturedBusinesses();
+  const [categories, featuredBusinesses, supermarkets] = await Promise.all([
+    getCategories(),
+    getFeaturedBusinesses(),
+    getSupermarkets().catch(() => []),
+  ]);
+  const activeFlyerCount = supermarkets.filter((s: any) => s.activeFlyer).length;
 
   return (
     <div className={styles.homePage}>
@@ -63,6 +67,28 @@ export default async function Home() {
           </Link>
         </div>
       </section>
+
+      {/* Supermarket Teaser */}
+      {supermarkets.length > 0 && (
+        <section className={styles.supermarketTeaser}>
+          <div className="container">
+            <Link href="/supermercados" className={styles.supermarketTeaserInner}>
+              <div className={styles.couponTeaserLeft}>
+                <span className={styles.couponTeaserIcon}>🛒</span>
+                <div>
+                  <p className={styles.couponTeaserTitle}>Encartes Semanais</p>
+                  <p className={styles.couponTeaserSub}>
+                    {activeFlyerCount > 0
+                      ? `${activeFlyerCount} supermercado${activeFlyerCount > 1 ? "s" : ""} com encarte ativo em ${cityConfig.name}`
+                      : `Ofertas dos supermercados de ${cityConfig.name}`}
+                  </p>
+                </div>
+              </div>
+              <span className={styles.supermarketTeaserCta}>Ver encartes →</span>
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* Featured Section */}
       <section className={`${styles.featured} section`}>

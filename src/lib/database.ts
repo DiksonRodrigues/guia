@@ -73,7 +73,43 @@ export async function getBusinessBySlug(slug: string) {
     `)
     .eq("slug", slug)
     .single();
-  
+
   if (error) throw error;
   return data;
+}
+
+export async function getSupermarkets() {
+  const today = new Date().toISOString().split("T")[0];
+  const { data, error } = await supabase
+    .from("supermarkets")
+    .select(`
+      *,
+      flyers (id, valid_from, valid_until, active)
+    `)
+    .eq("active", true)
+    .order("name");
+  if (error) throw error;
+  return (data ?? []).map((s: any) => ({
+    ...s,
+    activeFlyer: s.flyers?.find((f: any) => f.active && f.valid_until >= today) ?? null,
+  }));
+}
+
+export async function getSupermarketBySlug(slug: string) {
+  const today = new Date().toISOString().split("T")[0];
+  const { data, error } = await supabase
+    .from("supermarkets")
+    .select(`
+      *,
+      flyers (
+        id, valid_from, valid_until, pages, active,
+        flyer_highlights (id, product_name, original_price, sale_price, image_url)
+      )
+    `)
+    .eq("slug", slug)
+    .eq("active", true)
+    .single();
+  if (error) throw error;
+  const activeFlyer = data.flyers?.find((f: any) => f.active && f.valid_until >= today) ?? null;
+  return { ...data, activeFlyer };
 }

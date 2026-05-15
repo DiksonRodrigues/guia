@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
-import styles from "../../../../admin.module.css";
+import styles from "../../../admin.module.css";
 
 export default function DeleteFlyerBtn({ id, supermarketId }: { id: string; supermarketId: string }) {
   const [loading, setLoading] = useState(false);

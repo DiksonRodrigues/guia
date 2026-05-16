@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { MapPin } from "lucide-react";
 import styles from "./BannerCarousel.module.css";
 
@@ -34,10 +35,17 @@ export default function BannerCarousel({ businesses }: { businesses: Business[] 
             href={`/business/${biz.slug}`}
             key={biz.id}
             className={`${styles.slide} ${i === current ? styles.active : ""}`}
-            style={{ backgroundImage: `url(${biz.image_url})` }}
             aria-hidden={i !== current}
             tabIndex={i !== current ? -1 : 0}
           >
+            <Image
+              src={biz.image_url}
+              alt={biz.name}
+              fill
+              sizes="100vw"
+              style={{ objectFit: "cover", objectPosition: "center" }}
+              priority={i === 0}
+            />
             <div className={styles.overlay} />
             {biz.discount_label && (
               <span className={styles.discountBadge}>{biz.discount_label}</span>
@@ -52,7 +60,6 @@ export default function BannerCarousel({ businesses }: { businesses: Business[] 
         ))}
       </div>
 
-      {/* Dots */}
       <div className={styles.dots}>
         {slides.map((_, i) => (
           <button

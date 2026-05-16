@@ -1,12 +1,23 @@
-.image {
-  height: 200px;
-  background-size: cover;
-  background-position: center;
+/* 16:9 aspect ratio container */
+.imageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
   background-color: #e9e7f3;
 }
 
+.image {
+  transition: transform 0.4s ease;
+}
+
+.imageWrap:hover .image {
+  transform: scale(1.04);
+}
+
 .placeholder {
-  height: 200px;
+  width: 100%;
+  aspect-ratio: 16 / 9;
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -2,6 +2,7 @@ import { getSupermarketBySlug } from "@/lib/database";
 import { cityConfig } from "@/config/city";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, MapPin, Phone, CalendarDays, ShoppingCart, FileText } from "lucide-react";
 import FlyerViewer from "@/components/FlyerViewer/FlyerViewer";
 import styles from "./supermarket.module.css";
@@ -62,7 +63,9 @@ export default async function SupermarketDetailPage({ params }: { params: Promis
           <div className={styles.headerInner}>
             <div className={styles.headerLogo}>
               {supermarket.logo_url
-                ? <img src={supermarket.logo_url} alt={supermarket.name} className={styles.logo} />
+                ? <div className={styles.logoWrap}>
+                    <Image src={supermarket.logo_url} alt={supermarket.name} fill sizes="88px" style={{ objectFit: "contain" }} />
+                  </div>
                 : <div className={styles.logoPlaceholder}><ShoppingCart size={28} /></div>}
             </div>
             <div className={styles.headerInfo}>
@@ -105,7 +108,9 @@ export default async function SupermarketDetailPage({ params }: { params: Promis
                     return (
                       <div key={h.id} className={`${styles.highlightCard} glass-card`}>
                         {h.image_url ? (
-                          <div className={styles.highlightImg} style={{ backgroundImage: `url(${h.image_url})` }} />
+                          <div className={styles.highlightImg}>
+                            <Image src={h.image_url} alt={h.product_name} fill sizes="(max-width: 640px) 50vw, 200px" style={{ objectFit: "cover" }} />
+                          </div>
                         ) : (
                           <div className={`${styles.highlightImg} ${styles.highlightImgPlaceholder}`}>
                             <ShoppingCart size={28} />

@@ -1,14 +1,16 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { Search, X } from "lucide-react";
 import styles from "./FloatingSearch.module.css";
 
 export default function FloatingSearch() {
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
-  // Foca no input ao abrir
   useEffect(() => {
     if (open) {
       setTimeout(() => inputRef.current?.focus(), 100);
@@ -18,18 +20,24 @@ export default function FloatingSearch() {
     }
   }, [open]);
 
-  // Fecha com ESC
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") { setOpen(false); setQuery(""); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  const submit = () => {
+    const q = query.trim();
+    if (!q) return;
+    setOpen(false);
+    setQuery("");
+    router.push(`/search?q=${encodeURIComponent(q)}`);
+  };
+
   return (
     <>
-      {/* Botão Flutuante da Lupa */}
       <button
         id="floating-search-btn"
         className={styles.fab}
@@ -39,10 +47,9 @@ export default function FloatingSearch() {
         <Search size={22} />
       </button>
 
-      {/* Overlay + Modal de Busca */}
       {open && (
         <>
-          <div className={styles.overlay} onClick={() => setOpen(false)} />
+          <div className={styles.overlay} onClick={() => { setOpen(false); setQuery(""); }} />
           <div className={styles.modal}>
             <div className={styles.searchBar}>
               <Search size={20} className={styles.searchIcon} />
@@ -52,16 +59,21 @@ export default function FloatingSearch() {
                 type="text"
                 placeholder="Buscar estabelecimento ou categoria..."
                 className={styles.input}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && submit()}
               />
               <button
                 className={styles.closeBtn}
-                onClick={() => setOpen(false)}
+                onClick={() => { setOpen(false); setQuery(""); }}
                 aria-label="Fechar busca"
               >
                 <X size={20} />
               </button>
             </div>
-            <p className={styles.hint}>Pressione <kbd>ESC</kbd> para fechar</p>
+            <p className={styles.hint}>
+              Pressione <kbd>Enter</kbd> para buscar · <kbd>ESC</kbd> para fechar
+            </p>
           </div>
         </>
       )}

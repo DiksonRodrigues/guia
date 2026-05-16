@@ -1,20 +1,25 @@
 export const dynamic = "force-dynamic";
 
-import { MapPin, Star } from "lucide-react";
 import { cityConfig } from "@/config/city";
-import { getCategories, getFeaturedBusinesses, getSupermarkets } from "@/lib/database";
+import { getCategories, getBusinessesPaginated, getFeaturedBusinesses, getSupermarkets, getNeighborhoodsWithCount } from "@/lib/database";
 import Link from "next/link";
 import styles from "./page.module.css";
 import * as LucideIcons from "lucide-react";
 import FloatingSearch from "@/components/FloatingSearch/FloatingSearch";
 import BannerCarousel from "@/components/BannerCarousel/BannerCarousel";
+import BusinessFeed from "@/components/BusinessFeed/BusinessFeed";
 
 export default async function Home() {
-  const [categories, featuredBusinesses, supermarkets] = await Promise.all([
+  const [categories, featuredBusinesses, initialBusinesses, supermarkets, neighborhoods] = await Promise.all([
     getCategories(),
-    getFeaturedBusinesses(),
+    getFeaturedBusinesses().catch(() => []),
+    getBusinessesPaginated(0, 12).catch(() => []),
     getSupermarkets().catch(() => []),
+    getNeighborhoodsWithCount().catch(() => []),
   ]);
+  const topNeighborhoods = neighborhoods
+    .sort((a: any, b: any) => b.business_count - a.business_count)
+    .slice(0, 5);
   const activeFlyerCount = supermarkets.filter((s: any) => s.activeFlyer).length;
 
   return (
@@ -51,6 +56,25 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* Neighborhood Chips */}
+      {topNeighborhoods.length > 0 && (
+        <section className={styles.neighborhoodStrip}>
+          <div className="container">
+            <div className={styles.neighborhoodChips}>
+              <span className={styles.neighborhoodLabel}>Explorar por bairro:</span>
+              {topNeighborhoods.map((n: any) => (
+                <Link key={n.id} href={`/bairros/${n.slug}`} className={styles.neighborhoodChip}>
+                  {n.name}
+                </Link>
+              ))}
+              <Link href="/bairros" className={styles.neighborhoodChipMore}>
+                Ver todos →
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Coupon Teaser */}
       <section className={styles.couponTeaser}>
@@ -90,47 +114,10 @@ export default async function Home() {
         </section>
       )}
 
-      {/* Featured Section */}
+      {/* Business Feed com infinite scroll */}
       <section className={`${styles.featured} section`}>
         <div className="container">
-          <div className={styles.sectionHeader}>
-            <Link href="/business" className={styles.viewAll}>Ver todos</Link>
-          </div>
-          
-          <div className={styles.featuredGrid}>
-            {featuredBusinesses.map((biz: any, i: number) => (
-              <Link
-                href={`/business/${biz.slug}`}
-                key={biz.id}
-                className={`${styles.featuredCard} glass-card animate-fade`}
-                style={{ animationDelay: `${i * 0.1}s` }}
-              >
-                {biz.discount_label && (
-                  <span className={styles.discountBadge}>{biz.discount_label}</span>
-                )}
-                <div
-                  className={styles.cardImage}
-                  style={{ backgroundImage: `url(${biz.image_url})` }}
-                ></div>
-                <div className={styles.cardContent}>
-                  <div className={styles.cardHeader}>
-                    <h3 className={styles.cardTitle}>{biz.name}</h3>
-                    <div className={styles.cardRating}>
-                      <Star size={14} fill="currentColor" />
-                      <span>{Number(biz.rating).toFixed(1)}</span>
-                    </div>
-                  </div>
-                  <p className={styles.cardDesc}>{biz.description}</p>
-                  <div className={styles.cardFooter}>
-                    <span className={styles.cardTag}>{biz.categories?.name}</span>
-                    <span className={styles.cardLocation}>
-                      <MapPin size={12} /> {cityConfig.name}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+          <BusinessFeed initial={initialBusinesses} />
         </div>
       </section>
     </div>

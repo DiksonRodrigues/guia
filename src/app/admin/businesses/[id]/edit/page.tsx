@@ -13,13 +13,10 @@ export default async function EditBusinessPage({
 }) {
   const { id } = await params;
 
-  const [{ data: business }, { data: categories }] = await Promise.all([
-    supabase
-      .from("businesses")
-      .select("*, business_products(*)")
-      .eq("id", id)
-      .single(),
+  const [{ data: business }, { data: categories }, { data: neighborhoods }] = await Promise.all([
+    supabase.from("businesses").select("*, business_products(*)").eq("id", id).single(),
     supabase.from("categories").select("id, name").order("name"),
+    supabase.from("neighborhoods").select("id, name").eq("is_active", true).order("position"),
   ]);
 
   if (!business) return notFound();
@@ -29,7 +26,11 @@ export default async function EditBusinessPage({
       <div className={styles.topbar}>
         <h1 className={styles.pageTitle}>Editar: {business.name}</h1>
       </div>
-      <BusinessForm categories={categories ?? []} initial={business} />
+      <BusinessForm
+        categories={categories ?? []}
+        neighborhoods={neighborhoods ?? []}
+        initial={business}
+      />
     </AdminShell>
   );
 }

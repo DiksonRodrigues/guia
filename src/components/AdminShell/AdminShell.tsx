@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Store, Tag, LogOut, ShoppingCart } from "lucide-react";
+import { Store, Tag, LogOut, ShoppingCart, MapPin } from "lucide-react";
 import styles from "../../app/admin/admin.module.css";
 
 const navItems = [
   { href: "/admin/businesses", label: "Negócios", icon: Store },
+  { href: "/admin/bairros", label: "Bairros", icon: MapPin },
   { href: "/admin/cupons", label: "Cupons", icon: Tag },
   { href: "/admin/supermercados", label: "Supermercados", icon: ShoppingCart },
 ];

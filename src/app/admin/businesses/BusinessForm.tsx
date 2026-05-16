@@ -7,6 +7,7 @@ import { uploadImage } from "@/lib/storage";
 import styles from "../admin.module.css";
 
 type Category = { id: string; name: string };
+type Neighborhood = { id: string; name: string };
 type Product = { id?: string; name: string; price: string; image_url: string; _file?: File };
 
 type BusinessData = {
@@ -25,6 +26,7 @@ type BusinessData = {
   featured: boolean;
   discount_label: string;
   category_id: string;
+  neighborhood_id: string;
   business_products?: Product[];
 };
 
@@ -39,13 +41,16 @@ const empty: BusinessData = {
   name: "", slug: "", description: "", address: "", phone: "",
   whatsapp: "", hours: "", website: "", image_url: "", rating: 4.5,
   reviews_count: 0, featured: false, discount_label: "", category_id: "",
+  neighborhood_id: "",
 };
 
 export default function BusinessForm({
   categories,
+  neighborhoods,
   initial,
 }: {
   categories: Category[];
+  neighborhoods: Neighborhood[];
   initial?: BusinessData;
 }) {
   const isEdit = !!initial?.id;
@@ -91,6 +96,10 @@ export default function BusinessForm({
   const handleSubmit = async () => {
     if (!form.name || !form.slug || !form.category_id) {
       setError("Nome, slug e categoria são obrigatórios.");
+      return;
+    }
+    if (!form.neighborhood_id) {
+      setError("Selecione o bairro.");
       return;
     }
     setLoading(true);
@@ -186,6 +195,17 @@ export default function BusinessForm({
               <option value="">Selecione...</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label}>Bairro *</label>
+            <select className={styles.select} value={form.neighborhood_id}
+              onChange={(e) => set("neighborhood_id", e.target.value)}>
+              <option value="">Selecione...</option>
+              {neighborhoods.map((n) => (
+                <option key={n.id} value={n.id}>{n.name}</option>
               ))}
             </select>
           </div>

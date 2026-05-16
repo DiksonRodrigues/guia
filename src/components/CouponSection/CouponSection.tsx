@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Scissors, Copy, Check, MessageCircle, Tag } from "lucide-react";
 import Link from "next/link";
 import styles from "./CouponSection.module.css";
+import { track } from "@/lib/track";
 
 type Coupon = {
   id: string;
@@ -60,6 +61,7 @@ function CouponCard({ coupon }: { coupon: Coupon }) {
   function handleRedeem() {
     localStorage.setItem(storageKey, "true");
     setRedeemed(true);
+    track("coupon_redeem", { coupon_id: coupon.id });
     if (coupon.businesses?.whatsapp) {
       window.open(
         buildWhatsAppUrl(coupon.businesses.whatsapp, coupon.code, coupon.discount_label),

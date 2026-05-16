@@ -1,11 +1,10 @@
-import { 
-  MapPin, 
-  Phone, 
-  Clock, 
-  Globe, 
-  Star, 
-  MessageCircle, 
-  ExternalLink, 
+import {
+  MapPin,
+  Phone,
+  Clock,
+  Globe,
+  Star,
+  ExternalLink,
   Share2,
   Info,
   Calendar,
@@ -17,6 +16,8 @@ import { getBusinessBySlug } from "@/lib/database";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import styles from "./business.module.css";
+import BusinessTracker from "@/components/BusinessTracker/BusinessTracker";
+import WhatsAppButton from "@/components/WhatsAppButton/WhatsAppButton";
 
 export default async function BusinessDetail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -34,6 +35,8 @@ export default async function BusinessDetail({ params }: { params: Promise<{ slu
 
   return (
     <div className={styles.businessPage}>
+      <BusinessTracker businessId={business.id} />
+
       {/* Navigation Bar */}
       <div className="container" style={{ paddingTop: '2rem' }}>
         <Link href="/" className={styles.backButton}>
@@ -69,14 +72,11 @@ export default async function BusinessDetail({ params }: { params: Promise<{ slu
             </div>
             
             <div className={styles.actions}>
-              <a 
-                href={`https://wa.me/${business.whatsapp}`} 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <WhatsAppButton
+                whatsapp={business.whatsapp}
+                businessId={business.id}
                 className={`${styles.btn} ${styles.btnPrimary}`}
-              >
-                <MessageCircle size={20} /> WhatsApp
-              </a>
+              />
             </div>
           </div>
         </header>

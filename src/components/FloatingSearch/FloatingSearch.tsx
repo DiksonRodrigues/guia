@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Search, X } from "lucide-react";
 import styles from "./FloatingSearch.module.css";
+import { track } from "@/lib/track";
 
 export default function FloatingSearch() {
   const [open, setOpen] = useState(false);
@@ -31,6 +32,7 @@ export default function FloatingSearch() {
   const submit = () => {
     const q = query.trim();
     if (!q) return;
+    track("search", { metadata: { query: q } });
     setOpen(false);
     setQuery("");
     router.push(`/search?q=${encodeURIComponent(q)}`);

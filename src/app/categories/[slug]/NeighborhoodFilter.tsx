@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import styles from "./category.module.css";
+import { track } from "@/lib/track";
 
 type Neighborhood = { id: string; name: string; slug: string };
 
@@ -18,8 +19,12 @@ export default function NeighborhoodFilter({
 
   const setFilter = (slug: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
-    if (slug) params.set("bairro", slug);
-    else params.delete("bairro");
+    if (slug) {
+      params.set("bairro", slug);
+      track("filter_neighborhood", { metadata: { neighborhood_slug: slug } });
+    } else {
+      params.delete("bairro");
+    }
     router.push(`${pathname}?${params.toString()}`);
   };
 

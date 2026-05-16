@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { cityConfig } from "@/config/city";
 import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
+import GoogleAnalytics from "@/components/GoogleAnalytics/GoogleAnalytics";
+import CookieConsent from "@/components/CookieConsent/CookieConsent";
 
 export const metadata: Metadata = {
   title: `${cityConfig.appTitle} - Seu Guia de Negócios Locais`,
@@ -25,6 +27,8 @@ export default function RootLayout({
           </div>
         </footer>
 
+        <CookieConsent />
+        <GoogleAnalytics />
       </body>
     </html>
   );

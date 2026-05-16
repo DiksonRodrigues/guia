@@ -1,3 +1,4 @@
+import Image from "next/image";
 import styles from "./BusinessCardImage.module.css";
 
 const GRADIENTS = [
@@ -34,12 +35,16 @@ export default function BusinessCardImage({
 }) {
   if (url) {
     return (
-      <div
-        className={styles.image}
-        style={{ backgroundImage: `url(${url})` }}
-        role="img"
-        aria-label={name}
-      />
+      <div className={styles.imageWrap}>
+        <Image
+          src={url}
+          alt={name}
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          style={{ objectFit: "cover" }}
+          className={styles.image}
+        />
+      </div>
     );
   }
 

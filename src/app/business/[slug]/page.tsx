@@ -11,6 +11,7 @@ import {
   ArrowLeft,
   ShoppingBag
 } from "lucide-react";
+import Image from "next/image";
 import { cityConfig } from "@/config/city";
 import { getBusinessBySlug } from "@/lib/database";
 import Link from "next/link";
@@ -46,10 +47,19 @@ export default async function BusinessDetail({ params }: { params: Promise<{ slu
 
       {/* Hero Banner */}
       <div className={styles.hero}>
-        <div 
-          className={styles.heroImage} 
-          style={{ backgroundImage: `linear-gradient(to bottom, rgba(245, 244, 249, 0.1), var(--background)), url(${business.image_url})` }}
-        ></div>
+        <div className={styles.heroImage}>
+          {business.image_url && (
+            <Image
+              src={business.image_url}
+              alt={business.name}
+              fill
+              sizes="100vw"
+              style={{ objectFit: "cover", objectPosition: "center" }}
+              priority
+            />
+          )}
+          <div className={styles.heroGradient} />
+        </div>
       </div>
 
       <div className="container">
@@ -94,10 +104,15 @@ export default async function BusinessDetail({ params }: { params: Promise<{ slu
               <div className={styles.productGrid}>
                 {business.business_products?.map((prod: any, i: number) => (
                   <div key={i} className={styles.productCard}>
-                    <div 
-                      className={styles.productImage} 
-                      style={{ backgroundImage: `url(${prod.image_url || business.image_url})` }}
-                    ></div>
+                    <div className={styles.productImage}>
+                      <Image
+                        src={prod.image_url || business.image_url}
+                        alt={prod.name}
+                        fill
+                        sizes="(max-width: 640px) 50vw, 200px"
+                        style={{ objectFit: "cover" }}
+                      />
+                    </div>
                     <div className={styles.productInfo}>
                       <span className={styles.productName}>{prod.name}</span>
                       <span className={styles.productPrice}>{prod.price}</span>

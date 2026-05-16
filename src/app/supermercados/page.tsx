@@ -2,6 +2,7 @@ import { getSupermarkets } from "@/lib/database";
 import { cityConfig } from "@/config/city";
 import Link from "next/link";
 import { ShoppingCart, MapPin, Phone, ArrowRight, CalendarDays } from "lucide-react";
+import Image from "next/image";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -40,7 +41,9 @@ export default async function SupermercadosPage() {
               <Link key={s.id} href={`/supermercados/${s.slug}`} className={`${styles.card} glass-card`}>
                 <div className={styles.cardLogo}>
                   {s.logo_url
-                    ? <img src={s.logo_url} alt={s.name} className={styles.logo} />
+                    ? <div className={styles.logoWrap}>
+                        <Image src={s.logo_url} alt={s.name} fill sizes="96px" style={{ objectFit: "contain" }} />
+                      </div>
                     : <div className={styles.logoPlaceholder}><ShoppingCart size={32} /></div>}
                 </div>
 

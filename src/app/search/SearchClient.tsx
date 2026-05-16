@@ -6,6 +6,7 @@ import { cityConfig } from "@/config/city";
 import Link from "next/link";
 import Fuse from "fuse.js";
 import styles from "../page.module.css";
+import BusinessCardImage from "@/components/BusinessCardImage/BusinessCardImage";
 
 type Business = {
   id: string;
@@ -100,7 +101,7 @@ export default function SearchClient({ initialQuery }: { initialQuery: string })
                 {biz.discount_label && (
                   <span className={styles.discountBadge}>{biz.discount_label}</span>
                 )}
-                <div className={styles.cardImage} style={{ backgroundImage: `url(${biz.image_url})` }} />
+                <BusinessCardImage url={biz.image_url} name={biz.name} />
                 <div className={styles.cardContent}>
                   <div className={styles.cardHeader}>
                     <h3 className={styles.cardTitle}>{biz.name}</h3>

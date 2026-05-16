@@ -30,14 +30,16 @@
 
 .headerLogo { flex-shrink: 0; }
 
-.logo {
+.logoWrap {
+  position: relative;
   width: 88px;
   height: 88px;
-  object-fit: contain;
   border-radius: 14px;
   border: 1px solid var(--surface-border);
   background: #fff;
   padding: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .logoPlaceholder {
@@ -128,10 +130,11 @@
 }
 
 .highlightImg {
-  height: 140px;
-  background-size: cover;
-  background-position: center;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
   background-color: #f1f5f9;
+  overflow: hidden;
 }
 
 .highlightImgPlaceholder {
